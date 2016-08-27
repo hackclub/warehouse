@@ -9,10 +9,10 @@ services:
     environment:
       PGDATA: /db
   etl:
-    build: ./etl
+    build: .
     command: echo "'ello there! You gotta run me manually."
     volumes:
-      - ./etl:/usr/src/app
+      - .:/usr/src/app
     volumes_from:
       - data
     depends_on:
