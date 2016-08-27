@@ -4,7 +4,7 @@ Sequel.migration do
       column :key, 'text', primary_key: true
       column :creation_timestamp, 'timestamp', null: false
       column :last_updated_timestamp, 'timestamp', null: false
-      column :creator_key, 'text', null: false
+      foreign_key :creator_key, :streak__users, type: 'text', null: false
       column :name, 'text', null: false
       column :description, 'text'
       column :org_wide, 'boolean', null: false

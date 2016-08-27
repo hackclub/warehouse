@@ -27,6 +27,10 @@ transform ExtractTransform, {
               :name,
               :description,
               :org_wide
+            ],
+            pipeline_user_map: [
+              :user_key,
+              :pipeline_key
             ]
           }
 transform InsertPairsTransform, {
@@ -37,6 +41,9 @@ transform InsertPairsTransform, {
             pipeline: {
               _table: :streak__pipelines,
               _primary_key: :key
+            },
+            pipeline_user_map: {
+              _table: :streak__pipeline_user_maps
             }
           }, true
 transform DeleteKeysTransform, [ :_type ]

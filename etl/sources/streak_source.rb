@@ -7,9 +7,10 @@ class StreakSource
   end
 
   def each
-    # Raw data from Streak
+    # Streak data model
     pipelines = {}
     users = {}
+    pipeline_user_maps = []
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -17,8 +18,15 @@ class StreakSource
     @client.pipelines.each do |pipeline|
       pipelines[pipeline['key']] = pipeline
 
+      acl_entries = pipeline['aclEntries'].map do |e|
+        e['pipelineKey'] = pipeline['key']
+        e
+      end
+
+      pipeline_user_maps.concat acl_entries
+
       user_keys_to_lookup << pipeline['creatorKey']
-      user_keys_to_lookup.merge pipeline['aclEntries'].map { |e| e['userKey'] }
+      user_keys_to_lookup.merge acl_entries.map { |e| e['userKey'] }
     end
 
     user_keys_to_lookup.each do |key|
@@ -34,7 +42,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map ]
 
     order_to_insert.each do |type|
       case type
@@ -45,6 +53,10 @@ class StreakSource
       when :pipeline
         pipelines.each do |key, pipeline|
           rows << { _type: :pipeline }.merge(pipeline)
+        end
+      when :pipeline_user_map
+        pipeline_user_maps.each do |map|
+          rows << { _type: :pipeline_user_map }.merge(map)
         end
       end
     end
