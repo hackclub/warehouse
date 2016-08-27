@@ -1,9 +1,18 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (5.0.0.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
     addressable (2.4.0)
     awesome_print (1.7.0)
     byebug (9.0.5)
+    clockwork (2.0.0)
+      activesupport
+      tzinfo
+    concurrent-ruby (1.0.2)
     domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.1)
@@ -35,6 +44,7 @@ GEM
       domain_name (~> 0.5)
     httpclient (2.8.2.2)
     hurley (0.2)
+    i18n (0.7.0)
     jwt (1.5.4)
     kiba (0.6.1)
     little-plugger (1.1.4)
@@ -46,6 +56,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
+    minitest (5.9.0)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     netrc (0.11.0)
@@ -70,6 +81,9 @@ GEM
       jwt (~> 1.5)
       multi_json (~> 1.10)
     thor (0.19.1)
+    thread_safe (0.3.5)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
     uber (0.0.15)
     unf (0.1.4)
       unf_ext
@@ -81,6 +95,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   byebug
+  clockwork
   dotenv
   google_drive
   kiba
