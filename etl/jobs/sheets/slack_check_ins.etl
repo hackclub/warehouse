@@ -2,7 +2,7 @@ require_relative '../../sources/sheets_source.rb'
 require_relative '../../destinations/warehouse_destination.rb'
 
 pre_process do
-  $logger.info('Beginning Howdy Check-Ins job')
+  $logger.info('Beginning Slack Check-Ins job')
 end
 
 source SheetsSource, $config[:slack_check_ins_spreadsheet_key]
@@ -13,8 +13,8 @@ transform do |row|
   row
 end
 
-destination WarehouseDestination, $config[:database_url], :sheets__howdy_check_ins, :id
+destination WarehouseDestination, $config[:database_url], :sheets__slack_check_ins, :id
 
 post_process do
-  $logger.info('Howdy Check-Ins job successfully completed')
+  $logger.info('Slack Check-Ins job successfully completed')
 end
