@@ -1,0 +1,27 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes_from:
+      - data
+    environment:
+      PGDATA: /db
+  etl:
+    build: ./etl
+    command: echo "'ello there! You gotta run me manually."
+    volumes:
+      - ./etl:/usr/src/app
+    volumes_from:
+      - data
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:@db/postgres
+  data:
+    image: alpine
+    command: echo "I'm a little data volume, short and stout!"
+    volumes:
+      - /bundle
+      - /db
