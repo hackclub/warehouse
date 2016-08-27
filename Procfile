@@ -1,1 +1,1 @@
-etl-clock: cd etl && bundle exec clockwork etl/config/clock.rb
+etl_clock: bundle exec clockwork config/clock.rb
