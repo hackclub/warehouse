@@ -22,6 +22,10 @@ class StreakClient
     make_request(:get, "/users/#{user_key}")
   end
 
+  def boxes_in(pipeline_key)
+    make_request(:get, "/pipelines/#{pipeline_key}/boxes")
+  end
+
   protected
 
   def make_request(method, path, body=nil)
