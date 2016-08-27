@@ -14,6 +14,14 @@ class StreakClient
     make_request(:get, '/pipelines')
   end
 
+  def current_user
+    make_request(:get, '/users/me')
+  end
+
+  def user(user_key)
+    make_request(:get, "/users/#{user_key}")
+  end
+
   protected
 
   def make_request(method, path, body=nil)

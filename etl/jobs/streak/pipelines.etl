@@ -1,4 +1,4 @@
-require_relative '../../sources/streak_pipelines_source.rb'
+require_relative '../../sources/streak_source.rb'
 require_relative '../../transforms/keys_transform.rb'
 require_relative '../../transforms/extract_transform.rb'
 require_relative '../../transforms/parse_date_transform.rb'

@@ -1,15 +1,17 @@
 require 'date'
 
 class ParseDateTransform
-  def initialize(to_parse)
-    @to_parse = to_parse
+  def initialize(should_transform_lambda)
+    @should_transform_lam = should_transform_lambda
   end
 
   def process(row)
-    @to_parse.each do |k|
-      milliseconds_since_epoch = row[k]
+    row.each do |k, v|
+      if @should_transform_lam.call(k, v)
+        milliseconds_since_epoch = row[k]
 
-      row[k] = Time.at(milliseconds_since_epoch / 1000).to_datetime
+        row[k] = Time.at(milliseconds_since_epoch / 1000).to_datetime
+      end
     end
 
     row

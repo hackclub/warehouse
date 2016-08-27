@@ -7,7 +7,7 @@ Sequel.migration do
       column :creation_timestamp, 'timestamp', null: false
       column :last_updated_timestamp, 'timestamp', null: false
       column :email, 'text', unique: true, null: false
-      column :display_name, 'text', null: false
+      column :display_name, 'text'
       column :is_oauth_complete, 'boolean', null: false
       column :last_seen_timestamp, 'timestamp', null: false
     end

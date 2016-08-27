@@ -26,7 +26,7 @@ class KeysTransform
     when Hash
       res = val.map do |k, v|
         [
-          self.send(@transform_method_name, k),
+          self.send(@transform_method_name, k.to_s),
           transform_hash_keys(v)
         ]
       end

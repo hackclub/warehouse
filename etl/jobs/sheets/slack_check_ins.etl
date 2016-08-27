@@ -1,4 +1,5 @@
 require_relative '../../sources/sheets_source.rb'
+require_relative '../../transforms/delete_keys_transform.rb'
 require_relative '../../destinations/warehouse_destination.rb'
 
 pre_process do
@@ -7,11 +8,7 @@ end
 
 source SheetsSource, $config[:slack_check_ins_spreadsheet_key]
 
-transform do |row|
-  row.delete(:club_leader_name)
-
-  row
-end
+transform DeleteKeysTransform, [ :club_leader_name ]
 
 destination WarehouseDestination, $config[:database_url], :sheets__slack_check_ins, :id
 
