@@ -1,5 +1,9 @@
 # Warehouse
 
+_**Work in progress.**_
+
+---
+
 This repository contains tools for managing Hack Club's data warehouse.
 
 Currently it sync a few pieces of important data:
