@@ -1,0 +1,32 @@
+require_relative '../../sources/streak_pipelines_source.rb'
+require_relative '../../transforms/keys_transform.rb'
+require_relative '../../transforms/extract_transform.rb'
+require_relative '../../transforms/parse_date_transform.rb'
+require_relative '../../destinations/warehouse_destination.rb'
+
+pre_process do
+  $logger.info('Beginning Pipelines job')
+end
+
+source StreakPipelinesSource, $config[:streak_api_key]
+
+transform KeysTransform, :camel_case, :symbol
+transform ExtractTransform, [
+            :key,
+            :creation_timestamp,
+            :last_updated_timestamp,
+            :creator_key,
+            :name,
+            :description,
+            :org_wide
+          ]
+transform ParseDateTransform, [
+            :creation_timestamp,
+            :last_updated_timestamp
+          ]
+
+destination WarehouseDestination, $config[:database_url], :streak__pipelines, :key
+
+post_process do
+  $logger.info('Pipelines job successfully completed')
+end

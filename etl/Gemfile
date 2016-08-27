@@ -6,7 +6,9 @@ gem 'rake'
 
 gem 'kiba'
 gem 'google_drive'
+gem 'rest-client'
 
+# Development tools
 gem 'awesome_print'
 gem 'byebug'
 gem 'dotenv'

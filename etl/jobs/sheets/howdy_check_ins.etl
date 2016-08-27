@@ -1,11 +1,11 @@
-require_relative '../../sources/sheets.rb'
-require_relative '../../destinations/warehouse.rb'
+require_relative '../../sources/sheets_source.rb'
+require_relative '../../destinations/warehouse_destination.rb'
 
 pre_process do
   $logger.info('Beginning Howdy Check-Ins job')
 end
 
-source SheetsSource, $config[:howdy_check_ins_spreadsheet_key]
+source SheetsSource, $config[:slack_check_ins_spreadsheet_key]
 
 transform do |row|
   row.delete(:club_leader_name)
