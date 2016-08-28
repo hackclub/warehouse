@@ -13,6 +13,7 @@ class StreakSource
     pipeline_user_maps = []
     boxes = {}
     box_user_maps = []
+    stages = {}
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -31,7 +32,7 @@ class StreakSource
       user_keys_to_lookup << pipeline['creatorKey']
       user_keys_to_lookup.merge acl_entries.map { |e| e['userKey'] }
 
-      # Get all boxes in pipelines
+      # Get all boxes in pipeline
       @client.boxes_in(pipeline['key']).each do |box|
         boxes[box['key']] = box
 
@@ -45,6 +46,12 @@ class StreakSource
         box_user_maps.concat follower_maps
 
         user_keys_to_lookup.merge box['followerKeys']
+      end
+
+      # Get all stages in pipeline
+      @client.stages_in(pipeline['key']).each do |key, stage|
+        stage['pipelineKey'] = pipeline['key']
+        stages[stage['key']+stage['pipelineKey']] = stage
       end
     end
 
@@ -61,7 +68,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :box, :box_user_map ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :box, :box_user_map ]
 
     order_to_insert.each do |type|
       case type
@@ -84,6 +91,10 @@ class StreakSource
       when :box_user_map
         box_user_maps.each do |map|
           rows << { _type: :box_user_map }.merge(map)
+        end
+      when :stage
+        stages.each do |key, stage|
+          rows << { _type: :stage }.merge(stage)
         end
       end
     end

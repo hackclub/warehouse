@@ -39,11 +39,17 @@ transform ExtractTransform, {
               :creator_key,
               :pipeline_key,
               :name,
-              :notes
+              :notes,
+              :stage_key
             ],
             box_user_map: [
               :box_key,
               :user_key
+            ],
+            stage: [
+              :key,
+              :pipeline_key,
+              :name
             ]
           }
 transform InsertPairsTransform, {
@@ -64,6 +70,9 @@ transform InsertPairsTransform, {
             },
             box_user_map: {
               _table: :streak__box_user_maps
+            },
+            stage: {
+              _table: :streak__stages
             }
           }, true
 transform DeleteKeysTransform, [ :_type ]

@@ -26,6 +26,10 @@ class StreakClient
     make_request(:get, "/pipelines/#{pipeline_key}/boxes")
   end
 
+  def stages_in(pipeline_key)
+    make_request(:get, "/pipelines/#{pipeline_key}/stages")
+  end
+
   protected
 
   def make_request(method, path, body=nil)
