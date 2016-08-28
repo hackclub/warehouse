@@ -91,11 +91,3 @@ class StreakSource
     rows.each { |r| yield(r) }
   end
 end
-
-class StreakPipelinesSource < StreakSource
-  def each
-    @client.pipelines.each do |pipeline|
-      yield(pipeline)
-    end
-  end
-end
