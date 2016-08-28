@@ -18,3 +18,4 @@ $config = {
 $logger = Logger.new(STDOUT)
 
 Sequel.extension :migration
+Sequel::Database.extension :pg_enum

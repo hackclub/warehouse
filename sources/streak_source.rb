@@ -14,6 +14,7 @@ class StreakSource
     boxes = {}
     box_user_maps = []
     stages = {}
+    fields = {}
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -53,6 +54,12 @@ class StreakSource
         stage['pipelineKey'] = pipeline['key']
         stages[stage['key']+stage['pipelineKey']] = stage
       end
+
+      # Get all fields in pipelines
+      @client.fields_in(pipeline['key']).each do |field|
+        field['pipelineKey'] = pipeline['key']
+        fields[field['key']+field['pipelineKey']] = field
+      end
     end
 
     user_keys_to_lookup.each do |key|
@@ -68,7 +75,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :box, :box_user_map ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map ]
 
     order_to_insert.each do |type|
       case type
@@ -95,6 +102,10 @@ class StreakSource
       when :stage
         stages.each do |key, stage|
           rows << { _type: :stage }.merge(stage)
+        end
+      when :field
+        fields.each do |key, field|
+          rows << { _type: :field }.merge(field)
         end
       end
     end

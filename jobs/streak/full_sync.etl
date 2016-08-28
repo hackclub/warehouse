@@ -50,6 +50,12 @@ transform ExtractTransform, {
               :key,
               :pipeline_key,
               :name
+            ],
+            field: [
+              :key,
+              :pipeline_key,
+              :name,
+              :type
             ]
           }
 transform InsertPairsTransform, {
@@ -73,6 +79,9 @@ transform InsertPairsTransform, {
             },
             stage: {
               _table: :streak__stages
+            },
+            field: {
+              _table: :streak__fields
             }
           }, true
 transform DeleteKeysTransform, [ :_type ]
