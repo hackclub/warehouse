@@ -11,7 +11,7 @@ Currently it sync a few pieces of important data:
 - Our Google Sheet with the results of our weekly Slack check-ins with club leaders
 - _More to come!_
 
-[Click here][schema_spreadsheet] to see the full schema of our warehouse.
+[Click here][schema_spreadsheet] to see the full schema of our warehouse. Note: you **must** have PostgreSQL 9.5 or later for this project to work.
 
 [schema_spreadsheet]: https://docs.google.com/spreadsheets/d/13ozt8j9YEq8j7G_m4q5tjdc1c8TMsnKYa5_PGnXGfu4/edit
 
