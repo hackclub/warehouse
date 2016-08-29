@@ -63,6 +63,17 @@ transform ExtractTransform, {
               :pipeline_key,
               :box_key,
               :value
+            ],
+            task: [
+              :key,
+              :creation_date,
+              :last_status_change_date,
+              :box_key,
+              :creator_key,
+              :due_date,
+              :text,
+              :status,
+              :reminder_status
             ]
           }
 transform InsertPairsTransform, {
@@ -92,9 +103,23 @@ transform InsertPairsTransform, {
             },
             field_box_map: {
               _table: :streak__field_box_maps
+            },
+            task: {
+              _table: :streak__tasks
             }
           }, true
+transform ParseDateTransform, lambda { |row, k, v|
+  should_parse = false
+
+  if k.to_s.include? 'timestamp'
+    should_parse = true
+  elsif row[:_type] == :task
+    fields_to_parse = [ :creation_date, :last_status_change_date, :due_date ]
+    should_parse = true if fields_to_parse.include? k
+  end
+
+  should_parse
+}
 transform DeleteKeysTransform, [ :_type ]
-transform ParseDateTransform, lambda { | k, v| k.to_s.include? 'timestamp' }
 
 destination WarehouseDestination, $config[:database_url]

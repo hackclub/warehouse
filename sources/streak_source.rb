@@ -16,6 +16,7 @@ class StreakSource
     stages = {}
     fields = {}
     field_box_maps = []
+    tasks = {}
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -99,6 +100,11 @@ class StreakSource
 
         field_box_maps.concat field_maps
 
+        # Get all tasks for box
+        @client.tasks_for(box['key']).each do |task|
+          tasks[task['key']] = task
+        end
+
         # Make sure we look up the referenced users to get their data
         user_keys_to_lookup.merge box['followerKeys']
       end
@@ -117,7 +123,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map, :task ]
 
     order_to_insert.each do |type|
       case type
@@ -152,6 +158,10 @@ class StreakSource
       when :field_box_map
         field_box_maps.each do |map|
           rows << { _type: :field_box_map }.merge(map)
+        end
+      when :task
+        tasks.each do |key, task|
+          rows << { _type: :task }.merge(task)
         end
       end
     end

@@ -4,34 +4,38 @@ require 'json'
 require 'rest-client'
 
 class StreakClient
-  BASE_URL = 'https://www.streak.com/api/v1'
+  BASE_URL = 'https://www.streak.com/api'
 
   def initialize(api_key)
     @api_key = api_key
   end
 
   def pipelines
-    make_request(:get, '/pipelines')
+    make_request(:get, '/v1/pipelines')
   end
 
   def current_user
-    make_request(:get, '/users/me')
+    make_request(:get, '/v1/users/me')
   end
 
   def user(user_key)
-    make_request(:get, "/users/#{user_key}")
+    make_request(:get, "/v1/users/#{user_key}")
   end
 
   def boxes_in(pipeline_key)
-    make_request(:get, "/pipelines/#{pipeline_key}/boxes")
+    make_request(:get, "/v1/pipelines/#{pipeline_key}/boxes")
   end
 
   def stages_in(pipeline_key)
-    make_request(:get, "/pipelines/#{pipeline_key}/stages")
+    make_request(:get, "/v1/pipelines/#{pipeline_key}/stages")
   end
 
   def fields_in(pipeline_key)
-    make_request(:get, "/pipelines/#{pipeline_key}/fields")
+    make_request(:get, "/v1/pipelines/#{pipeline_key}/fields")
+  end
+
+  def tasks_for(box_key)
+    make_request(:get, "/v2/boxes/#{box_key}/tasks")['results']
   end
 
   protected
