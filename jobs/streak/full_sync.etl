@@ -54,6 +54,7 @@ transform ExtractTransform, {
             field: [
               :key,
               :pipeline_key,
+              :last_updated_timestamp,
               :name,
               :type
             ],
