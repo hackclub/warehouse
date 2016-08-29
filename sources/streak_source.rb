@@ -15,6 +15,7 @@ class StreakSource
     box_user_maps = []
     stages = {}
     fields = {}
+    field_box_maps = []
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -33,22 +34,6 @@ class StreakSource
       user_keys_to_lookup << pipeline['creatorKey']
       user_keys_to_lookup.merge acl_entries.map { |e| e['userKey'] }
 
-      # Get all boxes in pipeline
-      @client.boxes_in(pipeline['key']).each do |box|
-        boxes[box['key']] = box
-
-        follower_maps = box['followerKeys'].map do |k|
-          {
-            box_key: box['key'],
-            user_key: k
-          }
-        end
-
-        box_user_maps.concat follower_maps
-
-        user_keys_to_lookup.merge box['followerKeys']
-      end
-
       # Get all stages in pipeline
       @client.stages_in(pipeline['key']).each do |key, stage|
         stage['pipelineKey'] = pipeline['key']
@@ -59,6 +44,63 @@ class StreakSource
       @client.fields_in(pipeline['key']).each do |field|
         field['pipelineKey'] = pipeline['key']
         fields[field['key']+field['pipelineKey']] = field
+      end
+
+      # Get all boxes in pipeline
+      @client.boxes_in(pipeline['key']).each do |box|
+        boxes[box['key']] = box
+
+        # Record follower relationships
+        follower_maps = box['followerKeys'].map do |k|
+          {
+            box_key: box['key'],
+            user_key: k
+          }
+        end
+
+        box_user_maps.concat follower_maps
+
+        # Get the box's fields
+        field_maps = box['fields'].map do |key, value|
+          parsed_value = value
+
+          # Parse the value and set parsed_value to the field's actual value
+          # (like in the case of a dropdown)
+          parent_field = fields[key+pipeline['key']]
+
+          case parent_field['type']
+          when 'DROPDOWN'
+            dropdown_options = {}
+            value_key = value
+
+            parent_field['dropdownSettings']['items'].each do |item|
+              dropdown_options[item['key']] = item['name']
+            end
+
+            parsed_value = dropdown_options[value_key]
+          end
+
+          # Set the field's value to nil if the value is defined, but empty
+          # (like in the case of an empty string or array)
+          serialized_value = parsed_value.to_json
+
+          if value.respond_to? :empty? and value.empty?
+            serialized_value = nil
+          end
+
+          # The field entry itself
+          {
+            field_key: key,
+            pipeline_key: pipeline['key'],
+            box_key: box['key'],
+            value: serialized_value
+          }
+        end
+
+        field_box_maps.concat field_maps
+
+        # Make sure we look up the referenced users to get their data
+        user_keys_to_lookup.merge box['followerKeys']
       end
     end
 
@@ -75,7 +117,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map ]
 
     order_to_insert.each do |type|
       case type
@@ -106,6 +148,10 @@ class StreakSource
       when :field
         fields.each do |key, field|
           rows << { _type: :field }.merge(field)
+        end
+      when :field_box_map
+        field_box_maps.each do |map|
+          rows << { _type: :field_box_map }.merge(map)
         end
       end
     end
