@@ -17,6 +17,7 @@ class StreakSource
     fields = {}
     field_box_maps = []
     tasks = {}
+    task_user_maps = []
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -103,6 +104,13 @@ class StreakSource
         # Get all tasks for box
         @client.tasks_for(box['key']).each do |task|
           tasks[task['key']] = task
+
+          task['assignedToSharingEntries'].each do |assignee|
+            task_user_maps << {
+              task_key: task['key'],
+              user_key: assignee['userKey']
+            }
+          end
         end
 
         # Make sure we look up the referenced users to get their data
@@ -123,7 +131,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map, :task ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map, :task, :task_user_map ]
 
     order_to_insert.each do |type|
       case type
@@ -162,6 +170,10 @@ class StreakSource
       when :task
         tasks.each do |key, task|
           rows << { _type: :task }.merge(task)
+        end
+      when :task_user_map
+        task_user_maps.each do |map|
+          rows << { _type: :task_user_map }.merge(map)
         end
       end
     end

@@ -74,6 +74,10 @@ transform ExtractTransform, {
               :text,
               :status,
               :reminder_status
+            ],
+            task_user_map: [
+              :task_key,
+              :user_key
             ]
           }
 transform InsertPairsTransform, {
@@ -106,6 +110,9 @@ transform InsertPairsTransform, {
             },
             task: {
               _table: :streak__tasks
+            },
+            task_user_map: {
+              _table: :streak__task_user_maps
             }
           }, true
 transform ParseDateTransform, lambda { |row, k, v|
