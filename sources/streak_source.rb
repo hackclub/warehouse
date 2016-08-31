@@ -18,6 +18,7 @@ class StreakSource
     field_box_maps = []
     tasks = {}
     task_user_maps = []
+    files = {}
 
     # Temporary data to construct data model
     user_keys_to_lookup = Set.new
@@ -113,6 +114,19 @@ class StreakSource
           end
         end
 
+        # Get all files for box
+        @client.files_in(box['key']).each do |file|
+          # Rename 'fileOwner' to 'ownerKey'
+          file['ownerKey'] = file['fileOwner']
+          file.delete 'fileOwner'
+
+          # Rename 'fileType' to 'type'
+          file['type'] = file['fileType']
+          file.delete 'fileType'
+
+          files[file['key']] = file
+        end
+
         # Make sure we look up the referenced users to get their data
         user_keys_to_lookup.merge box['followerKeys']
       end
@@ -131,7 +145,7 @@ class StreakSource
 
     # Finalized rows to yield
     rows = []
-    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map, :task, :task_user_map ]
+    order_to_insert = [ :user, :pipeline, :pipeline_user_map, :stage, :field, :box, :box_user_map, :field_box_map, :task, :task_user_map, :file ]
 
     order_to_insert.each do |type|
       case type
@@ -174,6 +188,10 @@ class StreakSource
       when :task_user_map
         task_user_maps.each do |map|
           rows << { _type: :task_user_map }.merge(map)
+        end
+      when :file
+        files.each do |key, file|
+          rows << { _type: :file }.merge(file)
         end
       end
     end

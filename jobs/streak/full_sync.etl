@@ -78,6 +78,31 @@ transform ExtractTransform, {
             task_user_map: [
               :task_key,
               :user_key
+            ],
+            file: [
+              :key,
+
+              :creation_timestamp,
+              :last_updated_timestamp,
+              :last_saved_timestamp,
+
+              :box_key,
+              :owner_key,
+
+              :type,
+
+              :file_name,
+              :main_file_name,
+
+              :size,
+              :mime_type,
+
+              :gmail_api_file_id,
+              :gmail_message_id,
+
+              :drive_url,
+              :drive_file_id,
+              :drive_owner_id
             ]
           }
 transform InsertPairsTransform, {
@@ -113,6 +138,9 @@ transform InsertPairsTransform, {
             },
             task_user_map: {
               _table: :streak__task_user_maps
+            },
+            file: {
+              _table: :streak__files
             }
           }, true
 transform ParseDateTransform, lambda { |row, k, v|

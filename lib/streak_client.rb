@@ -38,6 +38,10 @@ class StreakClient
     make_request(:get, "/v2/boxes/#{box_key}/tasks")['results']
   end
 
+  def files_in(box_key)
+    make_request(:get, "/v1/boxes/#{box_key}/files")
+  end
+
   protected
 
   def make_request(method, path, body=nil)
