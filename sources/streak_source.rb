@@ -129,6 +129,7 @@ class StreakSource
 
         # Make sure we look up the referenced users to get their data
         user_keys_to_lookup.merge box['followerKeys']
+        user_keys_to_lookup.add(box['creatorKey'])
       end
     end
 
