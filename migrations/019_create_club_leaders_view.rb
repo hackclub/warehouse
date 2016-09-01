@@ -1,7 +1,7 @@
 Sequel.migration do
   up do
+    run %(CREATE EXTENSION tablefunc)
     create_schema :views
-
     run %(
 CREATE VIEW views.club_leaders AS
   SELECT ct.key,
@@ -80,5 +80,6 @@ CREATE VIEW views.club_leaders AS
   down do
     run %(DROP VIEW views.club_leaders)
     drop_schema :views
+    run %(DROP EXTENSION tablefunc)
   end
 end
