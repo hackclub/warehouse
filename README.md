@@ -1,14 +1,11 @@
 # Warehouse
 
-_**Work in progress.**_
-
----
-
 This repository contains tools for managing Hack Club's data warehouse.
 
 Currently it sync a few pieces of important data:
 
 - Our Google Sheet with the results of our weekly Slack check-ins with club leaders
+- All of the data from our Streak account
 - _More to come!_
 
 [Click here][schema_spreadsheet] to see the full schema of our warehouse. Note: you **must** have PostgreSQL 9.5 or later for this project to work.
