@@ -30,6 +30,9 @@ Here's the full environment configuration:
 # Key for the Google Sheet with the Slack check-ins
 SLACK_CHECK_INS_SPREADSHEET_KEY=1XxhV9st8el-9Wl5LEEmwchOauIXUQUaiOcNlbD4essw
 
+# Key for the Google Sheet with our Slack stats
+SLACK_STATS_SPREADSHEET_KEY=114bckXsXjcFqScuKn2J4NO4Cz2mP8DEobwv8lRkoLQU
+
 # The downloaded JSON service account key for Google Drive converted to base64.
 #
 # How to get this:

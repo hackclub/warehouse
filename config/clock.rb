@@ -16,5 +16,6 @@ module Clockwork
   end
 
   every(1.day, 'sheets/slack_check_ins.etl')
+  every(30.minutes, 'sheets/slack_stats.etl')
   every(15.minutes, 'streak/full_sync.etl')
 end

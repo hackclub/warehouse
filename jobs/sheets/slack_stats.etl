@@ -1,0 +1,32 @@
+require_relative '../../sources/sheets_source.rb'
+require_relative '../../transforms/keys_transform.rb'
+require_relative '../../destinations/warehouse_destination.rb'
+
+source SheetsSource, $config[:slack_stats_spreadsheet_key]
+
+transform KeysTransform, :camel_case, :symbol
+
+# Convert all strings to integers
+transform do |row|
+  keys_to_convert = [
+    :messages_from_people,
+    :messages_from_integrations,
+    :files_uploaded,
+    :people_posting,
+    :people_reading,
+    :team_size
+  ]
+
+  new_row = {}
+  row.each do |k, v|
+    if keys_to_convert.include?(k) && v.class == String
+      new_row[k] = v.gsub(/\D/, '').to_i
+    else
+      new_row[k] = v
+    end
+  end
+
+  new_row
+end
+
+destination WarehouseDestination, $config[:database_url], :sheets__slack_stats, :date
