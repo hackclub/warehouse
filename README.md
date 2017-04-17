@@ -1,5 +1,9 @@
 # Warehouse
 
+_**Warning: we've since switched over our data to [hackclub/api](https://github.com/hackclub/api). This repository is no longer used or maintained.**_
+
+- - -
+
 This repository contains tools for managing Hack Club's data warehouse.
 
 Currently it sync a few pieces of important data:
